@@ -1,6 +1,7 @@
 "use client";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { usePathname, useRouter } from "next/navigation";
-import React from "react";
+import React, { useEffect } from "react";
 
 type Props = {
   children: React.ReactNode;
@@ -8,18 +9,26 @@ type Props = {
 
 const LayoutAuth = ({ children }: Props) => {
   const pathname = usePathname();
+  const router = useRouter();
+  const { user } = useCurrentUser();
 
-  console.log({ pathname });
+  useEffect(() => {
+    console.log({ user });
+
+    if (user?.uid) {
+      router.push("/");
+    }
+  }, [user]);
 
   return (
-    <div className="h-[100vh] flex">
+    <div className="flex h-[100vh]">
       <div className="w-1/2">
         <img
           src={
             pathname === "/login" ? "/images/login.jpg" : "/images/signup.jpg"
           }
           alt="image"
-          className="w-full h-full object-cover"
+          className="h-full w-full object-cover"
         />
       </div>
       <div className="w-1/2">{children}</div>

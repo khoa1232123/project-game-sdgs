@@ -1,16 +1,22 @@
-import { db } from "@/configs/firebase";
+import { auth } from "@/configs/firebase";
 import { LoginType } from "@/contants/type";
 import { User, signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
 
-const useLogin = async ({ email, password }: LoginType) => {
+export const useLogin = () => {
   const [user, setUser] = useState<User>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const handleLogin = () => {
-    signInWithEmailAndPassword(db, email, password).then((data) => {
-      setUser(data.user);
-    });
+  const handleLogin = ({ email, password }: LoginType) => {
+    setIsLoading(true);
+    signInWithEmailAndPassword(auth, email, password)
+      .then((data) => {
+        setUser(data.user);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   };
 
-  return { handleLogin, user };
+  return { handleLogin, user, isLoading };
 };
