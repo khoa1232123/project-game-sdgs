@@ -1,7 +1,13 @@
 "use client";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
+import MainLayout from "./(main)/layout";
+import FaciliGameList from "./(main)/facili/game_list/page";
 
 export default function Home() {
   useCurrentUser();
-  return <div className="h-[100vh]">Welcome</div>;
+  return (
+    <MainLayout>
+      <FaciliGameList />
+    </MainLayout>
+  );
 }

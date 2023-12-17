@@ -1,7 +1,7 @@
 "use client";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { Inter } from "next/font/google";
-import "./globals.css";
+import "./globals.scss";
 
 const inter = Inter({ subsets: ["latin"] });
 

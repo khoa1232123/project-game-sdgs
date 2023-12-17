@@ -15,6 +15,7 @@ const Signup = (props: Props) => {
   const [dataRegister, setDataRegister] = useState<RegisterType>({
     email: "",
     password: "",
+    displayName: "",
   });
   const { handleRegister, isLoading } = useRegister();
 
@@ -40,6 +41,14 @@ const Signup = (props: Props) => {
       <div className="max-w-[500px] px-4">
         <form onSubmit={handleSubmit}>
           <h2 className="text-center text-2xl font-bold">Signup</h2>
+          <TextField
+            name="displayName"
+            type="text"
+            className="!mt-4 w-full"
+            label="Name"
+            size="small"
+            onChange={handleChange}
+          />
           <TextField
             name="email"
             type="email"

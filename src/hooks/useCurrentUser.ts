@@ -12,16 +12,19 @@ export const useCurrentUser = () => {
     const unsubscribe = onAuthStateChanged(auth, (authUser) => {
       setUser(authUser);
 
-      console.log({ authUser });
-
       if (!authUser?.uid) {
+        console.log("abc");
+
         router.push("/login");
       }
 
+      console.log({ pathname });
+
       if (
         authUser?.uid &&
-        (pathname.indexOf("/login") || pathname.indexOf("/signup"))
+        (pathname.includes("/login") || pathname.includes("/signup"))
       ) {
+        console.log("def");
         router.push("/");
       }
     });

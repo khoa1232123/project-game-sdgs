@@ -18,9 +18,12 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(to bottom,
+  background: linear-gradient(
+      to bottom,
       transparent,
-      rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
 }
 
 .flex-center {
@@ -33,4 +36,23 @@ body {
 
 .flex-center-start {
   @apply flex items-center justify-start;
+}
+
+.wrapper {
+  @apply m-auto w-full md:max-w-[768px] lg:max-w-[960px] xl:max-w-[1280px] 2xl:max-w-[1360px];
+
+  > .row {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+}
+
+.header {
+  @apply flex h-[60px] items-center;
+
+  &__logo {
+  }
+
+  &__right {
+  }
 }

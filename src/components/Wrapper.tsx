@@ -6,7 +6,7 @@ type Props = {
 };
 
 const Wrapper = ({ children, className = "" }: Props) => {
-  return <div className={`w-full ${className}`}>{children}</div>;
+  return <div className={`wrapper ${className}`}>{children}</div>;
 };
 
 export default Wrapper;

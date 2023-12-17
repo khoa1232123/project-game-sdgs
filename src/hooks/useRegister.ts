@@ -8,22 +8,16 @@ export const useRegister = () => {
   const [user, setUser] = useState<User>();
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleRegister = ({ email, password }: RegisterType) => {
+  const handleRegister = ({ email, password, displayName }: RegisterType) => {
     setIsLoading(true);
     createUserWithEmailAndPassword(auth, email, password)
       .then(async (data) => {
         const ref = collection(db, "users");
 
         await addDoc(ref, {
-          email: data.user.email || null,
-          displayName: data.user.displayName || null,
-          emailVerified: data.user.emailVerified || null,
-          isAnonymous: data.user.isAnonymous || null,
-          metadata: data.user.metadata || null,
-          phoneNumber: data.user.phoneNumber || null,
-          photoURL: data.user.photoURL || null,
-          refreshToken: data.user.refreshToken || null,
-          uid: data.user.uid || null,
+          email: email,
+          displayName: displayName,
+          uid: data.user.uid,
         });
 
         setUser(data.user);
