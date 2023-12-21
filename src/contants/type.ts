@@ -1,3 +1,7 @@
+export const ActionType = {
+  GAMES: "games",
+};
+
 export type LoginType = {
   email: string;
   password: string;
