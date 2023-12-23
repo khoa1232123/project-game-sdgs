@@ -1,45 +1,34 @@
 "use client";
 import Wrapper from "@/components/Wrapper";
-import { app, db } from "@/configs/firebase";
+import { db } from "@/configs/firebase";
 import { ActionType } from "@/contants/type";
 import { Game } from "@/entities/Game";
 import { useCurrentUser } from "@/hooks";
+import { useGames } from "@/hooks/useGames";
+import FaciliNewGameFormModal from "@/modals/FaciliNewGameFormModal";
 import { getPlayerUrl } from "@/untils/gameUntils";
+import { Button } from "@mui/material";
 import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-} from "@mui/material";
-import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
-import React, { useState } from "react";
+  collection,
+  doc,
+  getDocs,
+  orderBy,
+  query,
+  where,
+} from "firebase/firestore";
+import { useState } from "react";
 
 type Props = {};
 
 const FaciliGameList = (props: Props) => {
   const { user } = useCurrentUser();
   const [game, setGame] = useState<Game>();
-  const [games, setGames] = useState<Game[]>([]);
+  const { games, deleteGame } = useGames();
   const [showModal, setShowModal] = useState<boolean>(false);
 
-  const loads = async () => {
-    const q = query(
-      collection(db, ActionType.GAMES),
-      where("facilitatorUid", "==", user?.uid),
-      orderBy("createdAt", "desc"),
-    );
-    const querySnapshot = await getDocs(q);
-    let games: Game[] = [];
-    querySnapshot.forEach((item: any) => {
-      games.push({ ...item.data() });
-    });
-
-    setGames(games);
+  const showModalForNewGame = (event: any) => {
+    setShowModal(true);
   };
-
-  const showModalForNewGame = (event: any) => {};
 
   const showGameDetail = (event: any) => {
     const gameId = event.currentTarget.dataset.game_id;
@@ -48,28 +37,37 @@ const FaciliGameList = (props: Props) => {
     setShowModal(true);
   };
 
-  const handleCopy = (ev: any) => {
-    var textarea = window.document.getElementsByTagName("textarea")[0];
-    textarea.innerHTML = ev.target.dataset.copied_text;
-    textarea.select();
-    window.document.execCommand("copy");
-    alert("Copied!!");
+  const handleCopy = async (link: string) => {
+    try {
+      await navigator.clipboard.writeText(link);
+      alert("Copied!!");
+    } catch (error) {
+      console.error("Failed to copy link to clipboard:", error);
+    }
   };
 
-  const handleClose = () => {
-    setShowModal(false);
+  const handleDelete = async (gameId: string) => {
+    if (!gameId) return;
+    try {
+      await deleteGame(gameId);
+    } catch (error) {
+      console.log(error);
+    }
   };
+
+  console.log({ games });
 
   return (
     <Wrapper>
       <div className="container">
         <Button onClick={showModalForNewGame}>Create a new world</Button>
-        <table className="table">
+        <table className="table w-full">
           <thead>
             <tr>
               <th>No.</th>
               <th>Name of world</th>
               <th>URL for players</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -82,41 +80,32 @@ const FaciliGameList = (props: Props) => {
                   </td>
                   <td>{getPlayerUrl(item)}</td>
                   <td>
-                    <button
+                    <Button
+                      variant="contained"
+                      color="info"
+                      className="mr-2 bg-blue-500"
                       data-copied_text={getPlayerUrl(item)}
-                      onClick={handleCopy}
+                      onClick={() => handleCopy(getPlayerUrl(item))}
                     >
                       Copy
-                    </button>
+                    </Button>
+                    <Button
+                      onClick={() => handleDelete(item?.id || "")}
+                      variant="contained"
+                      color="error"
+                      className="bg-red-500"
+                    >
+                      Delete
+                    </Button>
                   </td>
+                  <td></td>
                 </tr>
               );
             })}
           </tbody>
         </table>
       </div>
-      <Dialog
-        open={showModal}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          {"Use Google's location service?"}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Let Google help apps determine location. This means sending
-            anonymous location data to Google, even when no apps are running.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Disagree</Button>
-          <Button onClick={handleClose} autoFocus>
-            Agree
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <FaciliNewGameFormModal open={showModal} setOpen={setShowModal} />
     </Wrapper>
   );
 };

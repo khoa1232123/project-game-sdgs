@@ -1,7 +1,7 @@
 import { Game } from "@/entities/Game";
 
 export const getPlayerUrlHost = (game: Game) => {
-  return game.host ? getHostName(game) : window.location.host;
+  return game?.host ? getHostName(game) : window.location.host || "";
 };
 
 export const getPlayerUrlHttpHost = (game: Game) => {
@@ -16,7 +16,7 @@ export const getHostName = (game: Game) => {
 
 export const getPlayerUrl = (game: Game) => {
   return `${
-    getPlayerUrlHost(game).indexOf("local") > -1 ? "http" : "https"
+    (getPlayerUrlHost(game) || "").indexOf("local") > -1 ? "http" : "https"
   }://${getPlayerUrlHost(game)}/player/entry/${game.playerUrlHash}${
     window.location.href.indexOf("localhost") > -1 ? "?test_polyrhythm" : ""
   }`;

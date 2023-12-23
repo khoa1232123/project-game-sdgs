@@ -32,7 +32,7 @@ export const useCurrentUser = () => {
     return () => {
       unsubscribe();
     };
-  }, []);
+  }, [pathname, router]);
 
   return { user };
 };

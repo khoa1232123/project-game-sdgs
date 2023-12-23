@@ -1,5 +1,8 @@
 export const ActionType = {
   GAMES: "games",
+  GAME: "game",
+  FACILITATOR: "facilitator",
+  FACILITATORS: "facilitators",
 };
 
 export type LoginType = {
