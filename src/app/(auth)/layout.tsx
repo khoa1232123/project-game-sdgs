@@ -1,4 +1,5 @@
 "use client";
+import LayoutLogin from "@/components/LayoutLogin";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect } from "react";
@@ -8,7 +9,6 @@ type Props = {
 };
 
 const LayoutAuth = ({ children }: Props) => {
-  const pathname = usePathname();
   const router = useRouter();
   const { user } = useCurrentUser();
 
@@ -20,20 +20,7 @@ const LayoutAuth = ({ children }: Props) => {
     }
   }, [user]);
 
-  return (
-    <div className="flex h-[100vh]">
-      <div className="w-1/2">
-        <img
-          src={
-            pathname === "/login" ? "/images/login.jpg" : "/images/signup.jpg"
-          }
-          alt="image"
-          className="h-full w-full object-cover"
-        />
-      </div>
-      <div className="w-1/2">{children}</div>
-    </div>
-  );
+  return <LayoutLogin>{children}</LayoutLogin>;
 };
 
 export default LayoutAuth;

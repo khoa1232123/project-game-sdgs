@@ -1,6 +1,8 @@
 export const ActionType = {
   GAMES: "games",
+  GAMEPLAYERS: "players",
   GAME: "game",
+  GAMEPLAYER: "player",
   FACILITATOR: "facilitator",
   FACILITATORS: "facilitators",
 };
@@ -24,4 +26,9 @@ export type GameType = {
   status?: number;
   playerUrlHash: string;
   playerHash: string;
+};
+
+export type GamePlayerType = {
+  nickname: string;
+  password: string;
 };

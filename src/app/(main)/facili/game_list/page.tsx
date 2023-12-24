@@ -5,6 +5,7 @@ import { ActionType } from "@/contants/type";
 import { Game } from "@/entities/Game";
 import { useCurrentUser } from "@/hooks";
 import { useGames } from "@/hooks/useGames";
+import FaciliDetailGameModal from "@/modals/FaciliDetailGameModal";
 import FaciliNewGameFormModal from "@/modals/FaciliNewGameFormModal";
 import { getPlayerUrl } from "@/untils/gameUntils";
 import { Button } from "@mui/material";
@@ -16,7 +17,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type Props = {};
 
@@ -24,17 +25,16 @@ const FaciliGameList = (props: Props) => {
   const { user } = useCurrentUser();
   const [game, setGame] = useState<Game>();
   const { games, deleteGame } = useGames();
-  const [showModal, setShowModal] = useState<boolean>(false);
+  const [showEditModal, setshowEditModal] = useState<boolean>(false);
+  const [showCreateModal, setShowCreateModal] = useState<boolean>(false);
 
-  const showModalForNewGame = (event: any) => {
-    setShowModal(true);
-  };
+  function showModalForNewGame(event: any) {
+    setShowCreateModal(true);
+  }
 
-  const showGameDetail = (event: any) => {
-    const gameId = event.currentTarget.dataset.game_id;
-    const game = games.filter((game) => game.id === gameId)[0];
+  const showGameDetail = (game: Game) => {
     setGame(game);
-    setShowModal(true);
+    setshowEditModal(true);
   };
 
   const handleCopy = async (link: string) => {
@@ -75,7 +75,10 @@ const FaciliGameList = (props: Props) => {
               return (
                 <tr key={item.id}>
                   <td>{games.length - index}</td>
-                  <td data-game_id={item.id} onClick={showGameDetail}>
+                  <td
+                    data-game_id={item.id}
+                    onClick={() => showGameDetail(item)}
+                  >
                     <span style={{ cursor: "pointer" }}>{item.title}</span>
                   </td>
                   <td>{getPlayerUrl(item)}</td>
@@ -105,7 +108,16 @@ const FaciliGameList = (props: Props) => {
           </tbody>
         </table>
       </div>
-      <FaciliNewGameFormModal open={showModal} setOpen={setShowModal} />
+      <FaciliNewGameFormModal
+        open={showCreateModal}
+        setOpen={setShowCreateModal}
+      />
+
+      <FaciliDetailGameModal
+        open={showEditModal}
+        setOpen={setshowEditModal}
+        game={game}
+      />
     </Wrapper>
   );
 };

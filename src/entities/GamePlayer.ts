@@ -1,0 +1,38 @@
+import firebase from "firebase/compat/app";
+import { SupportedLang } from "./Game";
+
+export type GamePlayer = {
+  id?: string;
+  hash?: string;
+  uid?: string;
+  name?: string;
+  nickname?: string;
+  email?: string;
+  avatar?: string;
+  language?: SupportedLang;
+  colorNumber?: number;
+  emoticon?: number;
+  money?: number;
+  time?: number;
+  principleB?: number;
+  principleG?: number;
+  principleY?: number;
+  changedMoney?: number;
+  changedTime?: number;
+  changedPrincipleB?: number;
+  changedPrincipleG?: number;
+  changedPrincipleY?: number;
+  changedEconomy?: number;
+  changedEnvironment?: number;
+  changedSociety?: number;
+  projectExecutingStatus?: number;
+  showIcon?: boolean;
+  chattingPlayerIds?: string[];
+  playerProjectIds?: number[];
+  finishedProjectIds?: number[];
+  justCompletedProjectId?: number;
+  executingProjectId?: number;
+  goal?: number;
+  goalPlanned?: number;
+  createdAt?: firebase.firestore.Timestamp;
+};
