@@ -13,8 +13,6 @@ const LayoutAuth = ({ children }: Props) => {
   const { user } = useCurrentUser();
 
   useEffect(() => {
-    console.log({ user });
-
     if (user?.uid) {
       router.push("/");
     }

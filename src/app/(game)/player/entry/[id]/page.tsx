@@ -35,8 +35,6 @@ const PlayerEntryPage = (props: Props) => {
     }
   }, [id]);
 
-  console.log({ game });
-
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
