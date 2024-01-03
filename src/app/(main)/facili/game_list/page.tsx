@@ -1,28 +1,18 @@
 "use client";
 import Wrapper from "@/components/Wrapper";
-import { db } from "@/configs/firebase";
-import { ActionType } from "@/contants/type";
 import { Game } from "@/entities/Game";
-import { useCurrentUser } from "@/hooks";
 import { useGames } from "@/hooks/useGames";
 import FaciliDetailGameModal from "@/modals/FaciliDetailGameModal";
 import FaciliNewGameFormModal from "@/modals/FaciliNewGameFormModal";
 import { getPlayerUrl } from "@/untils/gameUntils";
+import { ContentCopy, Delete } from "@mui/icons-material";
 import { Button } from "@mui/material";
-import {
-  collection,
-  doc,
-  getDocs,
-  orderBy,
-  query,
-  where,
-} from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { toast } from "react-toastify";
 
 type Props = {};
 
 const FaciliGameList = (props: Props) => {
-  const { user } = useCurrentUser();
   const [game, setGame] = useState<Game>();
   const { games, deleteGame } = useGames();
   const [showEditModal, setshowEditModal] = useState<boolean>(false);
@@ -40,7 +30,7 @@ const FaciliGameList = (props: Props) => {
   const handleCopy = async (link: string) => {
     try {
       await navigator.clipboard.writeText(link);
-      alert("Copied!!");
+      toast("Copy success!");
     } catch (error) {
       console.error("Failed to copy link to clipboard:", error);
     }
@@ -49,13 +39,14 @@ const FaciliGameList = (props: Props) => {
   const handleDelete = async (gameId: string) => {
     if (!gameId) return;
     try {
-      await deleteGame(gameId);
+      const conf = confirm("Do you want to delete this game?")
+      if (conf) {
+        await deleteGame(gameId);
+      }
     } catch (error) {
       console.log(error);
     }
   };
-
-  console.log({ games });
 
   return (
     <Wrapper>
@@ -74,34 +65,37 @@ const FaciliGameList = (props: Props) => {
             {games.map((item, index) => {
               return (
                 <tr key={item.id}>
-                  <td>{games.length - index}</td>
+                  <td className="text-center">{games.length - index}</td>
                   <td
                     data-game_id={item.id}
                     onClick={() => showGameDetail(item)}
+                    className="text-center"
+                    style={{ cursor: "pointer" }}
                   >
-                    <span style={{ cursor: "pointer" }}>{item.title}</span>
+                    <span>{item.title}</span>
                   </td>
                   <td>{getPlayerUrl(item)}</td>
                   <td>
-                    <Button
-                      variant="contained"
-                      color="info"
-                      className="mr-2 bg-blue-500"
-                      data-copied_text={getPlayerUrl(item)}
-                      onClick={() => handleCopy(getPlayerUrl(item))}
-                    >
-                      Copy
-                    </Button>
-                    <Button
-                      onClick={() => handleDelete(item?.id || "")}
-                      variant="contained"
-                      color="error"
-                      className="bg-red-500"
-                    >
-                      Delete
-                    </Button>
+                    <div className="flex justify-end gap-2">
+                      <Button
+                        variant="contained"
+                        color="info"
+                        className="min-w-[40px] rounded-full bg-blue-500 px-0"
+                        data-copied_text={getPlayerUrl(item)}
+                        onClick={() => handleCopy(getPlayerUrl(item))}
+                      >
+                        <ContentCopy />
+                      </Button>
+                      <Button
+                        onClick={() => handleDelete(item?.id || "")}
+                        variant="contained"
+                        color="error"
+                        className="min-w-[40px] rounded-full bg-red-500 px-0"
+                      >
+                        <Delete />
+                      </Button>
+                    </div>
                   </td>
-                  <td></td>
                 </tr>
               );
             })}

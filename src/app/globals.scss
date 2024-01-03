@@ -56,3 +56,14 @@ body {
   &__right {
   }
 }
+
+.card {
+  border: 1px solid #f5f5f5;
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 4px 8px;
+}
+
+.MuiButton-sizeMedium {
+  min-height: 40px;
+}

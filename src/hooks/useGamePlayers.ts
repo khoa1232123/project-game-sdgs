@@ -11,6 +11,7 @@ import {
   query,
   setDoc,
   where,
+  deleteDoc
 } from "@firebase/firestore";
 import { uuidv4 } from "@firebase/util";
 import { useRouter } from "next/navigation";
@@ -86,5 +87,11 @@ export const useGamePlayers = () => {
     console.log({ snapshot });
   };
 
-  return { players, loadGamePlayers, createGamePlayer, loadingGamePlayer };
+  const deleteGamePlayer =async (gameId: string, playerId: string) => {
+    if (gameId !== '' && playerId !== "") {
+      await deleteDoc(doc(db, ActionType.GAMES, gameId, ActionType.GAMEPLAYERS, playerId))
+    }
+  }
+
+  return { players, loadGamePlayers, createGamePlayer, loadingGamePlayer, deleteGamePlayer };
 };

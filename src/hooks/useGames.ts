@@ -1,23 +1,22 @@
-import { auth, db } from "@/configs/firebase";
+import { db } from "@/configs/firebase";
 import { ActionType } from "@/contants/type";
 import { Game } from "@/entities/Game";
+import { orderBy } from "@/libs/orderBy";
 import {
   collection,
   deleteDoc,
   doc,
-  getDocs,
   onSnapshot,
   query,
   serverTimestamp,
   setDoc,
+  updateDoc,
   where,
 } from "@firebase/firestore";
-import { User, onAuthStateChanged } from "firebase/auth";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useCurrentUser } from ".";
-import { orderBy } from "@/libs/orderBy";
 import { v4 as uuidv4 } from "uuid";
+import { useCurrentUser } from ".";
 
 export const useGames = () => {
   const router = useRouter();
@@ -61,9 +60,17 @@ export const useGames = () => {
     });
   };
 
+  const updateGame = async (game: Game) => {
+    if (!game?.id) return;
+    const gameRef = doc(db, ActionType.GAMES, game.id);
+    await updateDoc(gameRef, {
+      ...game,
+    });
+  };
+
   const deleteGame = async (gameId: string) => {
     await deleteDoc(doc(db, ActionType.GAMES, gameId));
   };
 
-  return { games, createGame, deleteGame };
+  return { games, createGame, deleteGame, updateGame };
 };

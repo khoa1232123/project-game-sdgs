@@ -8,10 +8,17 @@ export const useLogin = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleLogin = ({ email, password }: LoginType) => {
+    console.log({ email, password });
+
     setIsLoading(true);
     signInWithEmailAndPassword(auth, email, password)
       .then((data) => {
         setUser(data.user);
+        console.log({ data });
+
+      }).catch((e) => {
+        console.log(e);
+
       })
       .finally(() => {
         setIsLoading(false);
