@@ -67,3 +67,26 @@ body {
 .MuiButton-sizeMedium {
   min-height: 40px;
 }
+
+.fgp-facilitator {
+  &__top {
+    @apply flex-center;
+
+    &__avatar {
+      flex: 40%;
+
+      @apply flex-center flex-col;
+    }
+    &__comment {
+      flex: 60%;
+
+      textarea {
+        width: 100%;
+        padding: 4px 8px;
+        border: 1px solid #f5f5f5;
+        border-radius: 8px;
+        min-height: 120px;
+      }
+    }
+  }
+}

@@ -11,11 +11,12 @@ import {
   query,
   setDoc,
   where,
-  deleteDoc
+  deleteDoc,
 } from "@firebase/firestore";
 import { uuidv4 } from "@firebase/util";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 export const useGamePlayers = () => {
   const router = useRouter();
@@ -38,6 +39,14 @@ export const useGamePlayers = () => {
   };
 
   const createGamePlayer = async (gameId: string, player: GamePlayerType) => {
+    if (!player.nickname) {
+      toast.error("Ban can dat nickname de nguoi ta con biet");
+      return;
+    }
+    if (!player.password) {
+      toast.error("Ban can dat dat password");
+      return;
+    }
     const newId = uuidv4();
     const q = query(
       collection(db, ActionType.GAMES, gameId, ActionType.GAMEPLAYERS),
@@ -51,15 +60,18 @@ export const useGamePlayers = () => {
         ...snapshot.docs[0].data(),
         id: snapshot.docs[0].id,
       };
+      console.log({ playerUser, player });
+
       if (playerUser.password === player.password) {
         localStorage.setItem(
           "playerLogin",
           `${ActionType.GAMES}/${gameId}/${ActionType.GAMEPLAYERS}/${playerUser.id}`,
         );
       } else {
-        console.log(
+        toast.error(
           "nickname da co nguoi dat, ban co the dat lai nickname or ban dien dung mat khau",
         );
+        return;
       }
     } else {
       await setDoc(
@@ -77,6 +89,9 @@ export const useGamePlayers = () => {
     localStorage.setItem("gameId", gameId);
     localStorage.setItem("nickname", player.nickname);
 
+    toast.success(
+      "Ban da dang nhap thanh cong!",
+    );
     router.push("/player/game");
   };
 
@@ -87,11 +102,19 @@ export const useGamePlayers = () => {
     console.log({ snapshot });
   };
 
-  const deleteGamePlayer =async (gameId: string, playerId: string) => {
-    if (gameId !== '' && playerId !== "") {
-      await deleteDoc(doc(db, ActionType.GAMES, gameId, ActionType.GAMEPLAYERS, playerId))
+  const deleteGamePlayer = async (gameId: string, playerId: string) => {
+    if (gameId !== "" && playerId !== "") {
+      await deleteDoc(
+        doc(db, ActionType.GAMES, gameId, ActionType.GAMEPLAYERS, playerId),
+      );
     }
-  }
+  };
 
-  return { players, loadGamePlayers, createGamePlayer, loadingGamePlayer, deleteGamePlayer };
+  return {
+    players,
+    loadGamePlayers,
+    createGamePlayer,
+    loadingGamePlayer,
+    deleteGamePlayer,
+  };
 };

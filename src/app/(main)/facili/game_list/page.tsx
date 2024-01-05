@@ -39,7 +39,7 @@ const FaciliGameList = (props: Props) => {
   const handleDelete = async (gameId: string) => {
     if (!gameId) return;
     try {
-      const conf = confirm("Do you want to delete this game?")
+      const conf = confirm("Do you want to delete this game?");
       if (conf) {
         await deleteGame(gameId);
       }
@@ -50,68 +50,70 @@ const FaciliGameList = (props: Props) => {
 
   return (
     <Wrapper>
-      <div className="container">
-        <Button onClick={showModalForNewGame}>Create a new world</Button>
-        <table className="table w-full">
-          <thead>
-            <tr>
-              <th>No.</th>
-              <th>Name of world</th>
-              <th>URL for players</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {games.map((item, index) => {
-              return (
-                <tr key={item.id}>
-                  <td className="text-center">{games.length - index}</td>
-                  <td
-                    data-game_id={item.id}
-                    onClick={() => showGameDetail(item)}
-                    className="text-center"
-                    style={{ cursor: "pointer" }}
-                  >
-                    <span>{item.title}</span>
-                  </td>
-                  <td>{getPlayerUrl(item)}</td>
-                  <td>
-                    <div className="flex justify-end gap-2">
-                      <Button
-                        variant="contained"
-                        color="info"
-                        className="min-w-[40px] rounded-full bg-blue-500 px-0"
-                        data-copied_text={getPlayerUrl(item)}
-                        onClick={() => handleCopy(getPlayerUrl(item))}
-                      >
-                        <ContentCopy />
-                      </Button>
-                      <Button
-                        onClick={() => handleDelete(item?.id || "")}
-                        variant="contained"
-                        color="error"
-                        className="min-w-[40px] rounded-full bg-red-500 px-0"
-                      >
-                        <Delete />
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-      <FaciliNewGameFormModal
-        open={showCreateModal}
-        setOpen={setShowCreateModal}
-      />
+      <div className="row">
+        <div className="container">
+          <Button onClick={showModalForNewGame}>Create a new world</Button>
+          <table className="table w-full">
+            <thead>
+              <tr>
+                <th>No.</th>
+                <th>Name of world</th>
+                <th>URL for players</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {games.map((item, index) => {
+                return (
+                  <tr key={item.id}>
+                    <td className="text-center">{games.length - index}</td>
+                    <td
+                      data-game_id={item.id}
+                      onClick={() => showGameDetail(item)}
+                      className="text-center"
+                      style={{ cursor: "pointer" }}
+                    >
+                      <span>{item.title}</span>
+                    </td>
+                    <td>{getPlayerUrl(item)}</td>
+                    <td>
+                      <div className="flex justify-end gap-2">
+                        <Button
+                          variant="contained"
+                          color="info"
+                          className="min-w-[40px] rounded-full bg-blue-500 px-0"
+                          data-copied_text={getPlayerUrl(item)}
+                          onClick={() => handleCopy(getPlayerUrl(item))}
+                        >
+                          <ContentCopy />
+                        </Button>
+                        <Button
+                          onClick={() => handleDelete(item?.id || "")}
+                          variant="contained"
+                          color="error"
+                          className="min-w-[40px] rounded-full bg-red-500 px-0"
+                        >
+                          <Delete />
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+        <FaciliNewGameFormModal
+          open={showCreateModal}
+          setOpen={setShowCreateModal}
+        />
 
-      <FaciliDetailGameModal
-        open={showEditModal}
-        setOpen={setshowEditModal}
-        game={game}
-      />
+        <FaciliDetailGameModal
+          open={showEditModal}
+          setOpen={setshowEditModal}
+          game={game}
+        />
+      </div>
     </Wrapper>
   );
 };
